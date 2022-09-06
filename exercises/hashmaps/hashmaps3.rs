@@ -14,8 +14,6 @@
 
 // Execute `rustlings hint hashmaps3` or use the `hint` watch subcommand for a hint.
 
-// I AM NOT DONE
-
 use std::collections::HashMap;
 
 // A structure to store team name and its goal details.
@@ -23,6 +21,21 @@ struct Team {
     name: String,
     goals_scored: u8,
     goals_conceded: u8,
+}
+
+fn insert_or_modify(
+    scores: &mut HashMap<String, Team>,
+    name: String,
+    goals_scored: u8,
+    goals_conceded: u8,
+) {
+    let team_entry = scores.entry(name.clone()).or_insert(Team {
+        name,
+        goals_scored: 0,
+        goals_conceded: 0,
+    });
+    team_entry.goals_scored += goals_scored;
+    team_entry.goals_conceded += goals_conceded;
 }
 
 fn build_scores_table(results: String) -> HashMap<String, Team> {
@@ -40,6 +53,8 @@ fn build_scores_table(results: String) -> HashMap<String, Team> {
         // will be number of goals conceded from team_2, and similarly
         // goals scored by team_2 will be the number of goals conceded by
         // team_1.
+        insert_or_modify(&mut scores, team_1_name.clone(), team_1_score, team_2_score);
+        insert_or_modify(&mut scores, team_2_name.clone(), team_2_score, team_1_score);
     }
     scores
 }
